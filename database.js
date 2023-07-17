@@ -5,7 +5,7 @@ let dbConnection
 module.exports = {
     connectToDatabase: (callback) => {
         MongoClient.connect("mongodb://localhost:27017/bookstore")
-        .then((response) => {           
+        .then((response) => {     
             dbConnection = response.db()
             return callback()
         })
@@ -18,4 +18,8 @@ module.exports = {
         return dbConnection
     }
 }
+
+
+
+
 
