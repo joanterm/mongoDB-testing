@@ -1,6 +1,6 @@
 const express = require("express")
 const server = express()
-server.use(express.json({extended: false}))
+server.use(express.json({extended: false}))//PARSES COMING IN JSON REQUEST
 const {connectToDatabase, getDatabase} = require("./database")
 const {ObjectId} = require("mongodb")
 
@@ -55,7 +55,17 @@ server.get("/books/:id", (req, res) => {
     } else {
         res.status(500).json({message: "The id is not a string of 12 bytes or 24 hex characters"})
     }
+})
 
+server.post("/books", (req, res) => {
+    db.collection("books")
+        .insertOne(req.body)
+        .then((result) => {
+            res.status(201).json(result)
+        })
+        .catch(() => {
+            res.status(500).json({message: "Error getting data"})
+        })
 })
 
 
