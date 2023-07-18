@@ -74,11 +74,24 @@ server.delete("/books/:id", (req, res) => {
         db.collection("books")
         .deleteOne({_id: new ObjectId(id)})
         .then((result) => {
-                if (result === null) { //CHECKS IF GIVEN ID EXISTS IN DATABASE
-                    res.status(404).json({message: "There is no book with this id"})
-                } else {
-                    res.status(200).json(result)
-                }
+            res.status(200).json(result)
+        })
+        .catch(() => {
+            res.status(500).json({message: "Error getting data"})
+        })
+    } else {
+        res.status(500).json({message: "The id is not a string of 12 bytes or 24 hex characters"})
+    }
+})
+
+server.put("/books/:id", (req, res) => {
+    const id = req.params.id
+    const body = req.body
+    if (ObjectId.isValid(id)) { //CHECKS FOR 12BYTES OR 24HEX CHARS OF MONGO'S IDS
+        db.collection("books")
+        .updateOne({_id: new ObjectId(id)}, {$set: body})
+        .then((result) => {
+            res.status(200).json(result)
         })
         .catch(() => {
             res.status(500).json({message: "Error getting data"})
